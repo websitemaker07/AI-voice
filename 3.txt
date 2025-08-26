@@ -1,0 +1,15 @@
+# 🌐 AI Hindi-English Translator with Voice
+
+Free AI tool to translate between English ↔ Hindi with real-time voice output.  
+Built using HuggingFace Transformers, Gradio, and gTTS.
+
+## Features
+- English ↔ Hindi translation
+- Hinglish input support
+- Audio pronunciation output
+- Mobile-friendly web app
+
+## Run locally
+```bash
+pip install -r requirements.txt
+python app.py

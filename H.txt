@@ -1,0 +1,39 @@
+import gradio as gr
+from transformers import pipeline
+from gtts import gTTS
+
+# Translation pipelines
+en_to_hi = pipeline("translation", model="Helsinki-NLP/opus-mt-en-hi")
+hi_to_en = pipeline("translation", model="Helsinki-NLP/opus-mt-hi-en")
+
+def translate_and_speak(text, direction):
+    if not text.strip():
+        return "Please enter some text.", None
+    
+    if direction == "English → Hindi":
+        translated = en_to_hi(text)[0]['translation_text']
+        tts_lang = "hi"
+    else:
+        translated = hi_to_en(text)[0]['translation_text']
+        tts_lang = "en"
+
+    # Generate speech
+    tts = gTTS(translated, lang=tts_lang)
+    tts.save("out.mp3")
+
+    return translated, "out.mp3"
+
+# Gradio UI
+iface = gr.Interface(
+    fn=translate_and_speak,
+    inputs=[
+        gr.Textbox(lines=3, placeholder="Type here..."),
+        gr.Radio(["English → Hindi", "Hindi → English"], value="English → Hindi")
+    ],
+    outputs=[gr.Textbox(label="Translation"), gr.Audio(label="Audio", type="filepath")],
+    title="🌐 AI Hindi-English Translator with Voice",
+    description="Type in English or Hindi → Get instant translation + voice output!"
+)
+
+if __name__ == "__main__":
+    iface.launch()
